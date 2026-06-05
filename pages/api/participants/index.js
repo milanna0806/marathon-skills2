@@ -16,13 +16,22 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    const { email, first_name, last_name, gender, birth_date, country } = req.body;
-    if (!email || !first_name || !last_name)
+    const { email, name, surname, gender, dob, country } = req.body;
+    if (!email || !name || !surname)
       return res.status(400).json({ error: "Missing required fields" });
 
     const { data, error } = await supabase
       .from("participants")
-      .insert([{ email, first_name, last_name, gender, birth_date, country, role: "Бегун", created_by: session.user.id }])
+      .insert([{
+        email,
+        name,
+        surname,
+        gender,
+        dob,
+        country,
+        role: "Бегун",
+        owner_id: session.user.id,
+      }])
       .select()
       .single();
 

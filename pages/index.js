@@ -139,7 +139,7 @@ export default function Home() {
     const res = await fetch("/api/participants", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: form.email, first_name: form.first, last_name: form.last, gender: form.gender, birth_date: form.birth, country: form.country }),
+      body: JSON.stringify({ email: form.email, name: form.first, surname: form.last, gender: form.gender, dob: form.birth, country: form.country }),
     });
     setLoading(false);
 
@@ -170,9 +170,9 @@ export default function Home() {
   // ── Filtered users ─────────────────────────────────────────────────────────
   const filtered = participants
     .filter((u) => !filter.role || u.role === filter.role)
-    .filter((u) => !filter.q || [u.first_name, u.last_name, u.email].some((s) => (s || "").toLowerCase().includes(filter.q.toLowerCase())))
+    .filter((u) => !filter.q || [u.name, u.surname, u.email].some((s) => (s || "").toLowerCase().includes(filter.q.toLowerCase())))
     .sort((a, b) => {
-      const k = { first: "first_name", last: "last_name", email: "email", role: "role" }[filter.sort] || "first_name";
+      const k = { first: "name", last: "surname", email: "email", role: "role" }[filter.sort] || "first_name";
       return (a[k] || "").localeCompare(b[k] || "");
     });
 
@@ -363,7 +363,7 @@ export default function Home() {
                       <div className="result-extra">⚖️ Идеальный вес: {Math.round(bmiIdealLow)}–{Math.round(bmiIdealLow+5)} кг</div>
                       <div className="result-extra">🔥 Оценка жира: {bmiFat.toFixed(1)}%</div>
                     </>}
-                    {lastReg && <div className="result-user">👤 {lastReg.first_name} {lastReg.last_name}</div>}
+                    {lastReg && <div className="result-user">👤 {lastReg.name} {lastReg.surname}</div>}
                     <div className="bmi-tips">
                       <div className="tip">💡 ИМТ не учитывает мышечную массу</div>
                       <div className="tip">💡 Для спортсменов BMI может быть выше нормы</div>
@@ -419,8 +419,8 @@ export default function Home() {
                 <tbody>
                   {filtered.map(u=>(
                     <tr key={u.id}>
-                      <td style={{color:"var(--text)"}}>{u.first_name}</td>
-                      <td>{u.last_name}</td>
+                      <td style={{color:"var(--text)"}}>{u.name}</td>
+                      <td>{u.surname}</td>
                       <td style={{color:"var(--dim)"}}>{u.email}</td>
                       <td>{u.bmi ? parseFloat(u.bmi).toFixed(1) : "—"}</td>
                       <td><span className={`role-badge ${u.role==="Координатор"?"role-coord":"role-runner"}`}>{u.role}</span></td>
