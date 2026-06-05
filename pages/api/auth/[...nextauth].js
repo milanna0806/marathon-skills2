@@ -14,6 +14,12 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // После логина всегда на главную
+      if (url.startsWith(baseUrl)) return url;
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      return baseUrl;
+    },
     async session({ session, token }) {
       session.user.id = token.sub;
       return session;
