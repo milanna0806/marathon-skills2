@@ -14,7 +14,6 @@ export default async function handler(req, res) {
   if (req.method === "PATCH") {
     const { bmi, name, surname, email, gender, dob, country, role } = req.body;
 
-    // Non-admins can only update BMI of their own participants
     if (!isAdmin) {
       const { data: participant } = await supabaseAdmin
         .from("participants")
@@ -36,7 +35,6 @@ export default async function handler(req, res) {
       return res.status(200).json(data);
     }
 
-    // Admin can update everything
     const updateFields = {};
     if (bmi !== undefined) updateFields.bmi = bmi;
     if (name !== undefined) updateFields.name = name;
